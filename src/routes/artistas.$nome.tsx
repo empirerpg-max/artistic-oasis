@@ -109,7 +109,7 @@ function StatCard({ icon, label, value, bar, barColor, accent }: {
   );
 }
 
-function ActionLink({ to, params, icon, label }: { to: string; params: Record<string, string>; icon: React.ReactNode; label: string }) {
+function ActionLink({ to, params, icon, label }: { to: string; params: { nome: string }; icon: React.ReactNode; label: string }) {
   return (
     <Link
       to={to as any}
