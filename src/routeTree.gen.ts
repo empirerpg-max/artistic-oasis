@@ -9,38 +9,122 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RadarRouteImport } from './routes/radar'
+import { Route as HallRouteImport } from './routes/hall'
+import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArtistasIndexRouteImport } from './routes/artistas.index'
+import { Route as ArtistasNomeRouteImport } from './routes/artistas.$nome'
 
+const RadarRoute = RadarRouteImport.update({
+  id: '/radar',
+  path: '/radar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HallRoute = HallRouteImport.update({
+  id: '/hall',
+  path: '/hall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartsRoute = ChartsRouteImport.update({
+  id: '/charts',
+  path: '/charts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtistasIndexRoute = ArtistasIndexRouteImport.update({
+  id: '/artistas/',
+  path: '/artistas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistasNomeRoute = ArtistasNomeRouteImport.update({
+  id: '/artistas/$nome',
+  path: '/artistas/$nome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/charts': typeof ChartsRoute
+  '/hall': typeof HallRoute
+  '/radar': typeof RadarRoute
+  '/artistas/$nome': typeof ArtistasNomeRoute
+  '/artistas/': typeof ArtistasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/charts': typeof ChartsRoute
+  '/hall': typeof HallRoute
+  '/radar': typeof RadarRoute
+  '/artistas/$nome': typeof ArtistasNomeRoute
+  '/artistas': typeof ArtistasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/charts': typeof ChartsRoute
+  '/hall': typeof HallRoute
+  '/radar': typeof RadarRoute
+  '/artistas/$nome': typeof ArtistasNomeRoute
+  '/artistas/': typeof ArtistasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/charts'
+    | '/hall'
+    | '/radar'
+    | '/artistas/$nome'
+    | '/artistas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/charts' | '/hall' | '/radar' | '/artistas/$nome' | '/artistas'
+  id:
+    | '__root__'
+    | '/'
+    | '/charts'
+    | '/hall'
+    | '/radar'
+    | '/artistas/$nome'
+    | '/artistas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChartsRoute: typeof ChartsRoute
+  HallRoute: typeof HallRoute
+  RadarRoute: typeof RadarRoute
+  ArtistasNomeRoute: typeof ArtistasNomeRoute
+  ArtistasIndexRoute: typeof ArtistasIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/radar': {
+      id: '/radar'
+      path: '/radar'
+      fullPath: '/radar'
+      preLoaderRoute: typeof RadarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hall': {
+      id: '/hall'
+      path: '/hall'
+      fullPath: '/hall'
+      preLoaderRoute: typeof HallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/charts': {
+      id: '/charts'
+      path: '/charts'
+      fullPath: '/charts'
+      preLoaderRoute: typeof ChartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +132,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/artistas/': {
+      id: '/artistas/'
+      path: '/artistas'
+      fullPath: '/artistas/'
+      preLoaderRoute: typeof ArtistasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artistas/$nome': {
+      id: '/artistas/$nome'
+      path: '/artistas/$nome'
+      fullPath: '/artistas/$nome'
+      preLoaderRoute: typeof ArtistasNomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChartsRoute: ChartsRoute,
+  HallRoute: HallRoute,
+  RadarRoute: RadarRoute,
+  ArtistasNomeRoute: ArtistasNomeRoute,
+  ArtistasIndexRoute: ArtistasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
