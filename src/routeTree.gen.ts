@@ -9,38 +9,180 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RadarRouteImport } from './routes/radar'
+import { Route as HallRouteImport } from './routes/hall'
+import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArtistasIndexRouteImport } from './routes/artistas.index'
+import { Route as ArtistasNomeRouteImport } from './routes/artistas.$nome'
+import { Route as AcoesTourRouteImport } from './routes/acoes.tour'
+import { Route as AcoesMusicaRouteImport } from './routes/acoes.musica'
+import { Route as AcoesCinemaRouteImport } from './routes/acoes.cinema'
+import { Route as AcoesAlbumRouteImport } from './routes/acoes.album'
 
+const RadarRoute = RadarRouteImport.update({
+  id: '/radar',
+  path: '/radar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HallRoute = HallRouteImport.update({
+  id: '/hall',
+  path: '/hall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartsRoute = ChartsRouteImport.update({
+  id: '/charts',
+  path: '/charts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtistasIndexRoute = ArtistasIndexRouteImport.update({
+  id: '/artistas/',
+  path: '/artistas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistasNomeRoute = ArtistasNomeRouteImport.update({
+  id: '/artistas/$nome',
+  path: '/artistas/$nome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcoesTourRoute = AcoesTourRouteImport.update({
+  id: '/acoes/tour',
+  path: '/acoes/tour',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcoesMusicaRoute = AcoesMusicaRouteImport.update({
+  id: '/acoes/musica',
+  path: '/acoes/musica',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcoesCinemaRoute = AcoesCinemaRouteImport.update({
+  id: '/acoes/cinema',
+  path: '/acoes/cinema',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcoesAlbumRoute = AcoesAlbumRouteImport.update({
+  id: '/acoes/album',
+  path: '/acoes/album',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/charts': typeof ChartsRoute
+  '/hall': typeof HallRoute
+  '/radar': typeof RadarRoute
+  '/acoes/album': typeof AcoesAlbumRoute
+  '/acoes/cinema': typeof AcoesCinemaRoute
+  '/acoes/musica': typeof AcoesMusicaRoute
+  '/acoes/tour': typeof AcoesTourRoute
+  '/artistas/$nome': typeof ArtistasNomeRoute
+  '/artistas/': typeof ArtistasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/charts': typeof ChartsRoute
+  '/hall': typeof HallRoute
+  '/radar': typeof RadarRoute
+  '/acoes/album': typeof AcoesAlbumRoute
+  '/acoes/cinema': typeof AcoesCinemaRoute
+  '/acoes/musica': typeof AcoesMusicaRoute
+  '/acoes/tour': typeof AcoesTourRoute
+  '/artistas/$nome': typeof ArtistasNomeRoute
+  '/artistas': typeof ArtistasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/charts': typeof ChartsRoute
+  '/hall': typeof HallRoute
+  '/radar': typeof RadarRoute
+  '/acoes/album': typeof AcoesAlbumRoute
+  '/acoes/cinema': typeof AcoesCinemaRoute
+  '/acoes/musica': typeof AcoesMusicaRoute
+  '/acoes/tour': typeof AcoesTourRoute
+  '/artistas/$nome': typeof ArtistasNomeRoute
+  '/artistas/': typeof ArtistasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/charts'
+    | '/hall'
+    | '/radar'
+    | '/acoes/album'
+    | '/acoes/cinema'
+    | '/acoes/musica'
+    | '/acoes/tour'
+    | '/artistas/$nome'
+    | '/artistas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/charts'
+    | '/hall'
+    | '/radar'
+    | '/acoes/album'
+    | '/acoes/cinema'
+    | '/acoes/musica'
+    | '/acoes/tour'
+    | '/artistas/$nome'
+    | '/artistas'
+  id:
+    | '__root__'
+    | '/'
+    | '/charts'
+    | '/hall'
+    | '/radar'
+    | '/acoes/album'
+    | '/acoes/cinema'
+    | '/acoes/musica'
+    | '/acoes/tour'
+    | '/artistas/$nome'
+    | '/artistas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChartsRoute: typeof ChartsRoute
+  HallRoute: typeof HallRoute
+  RadarRoute: typeof RadarRoute
+  AcoesAlbumRoute: typeof AcoesAlbumRoute
+  AcoesCinemaRoute: typeof AcoesCinemaRoute
+  AcoesMusicaRoute: typeof AcoesMusicaRoute
+  AcoesTourRoute: typeof AcoesTourRoute
+  ArtistasNomeRoute: typeof ArtistasNomeRoute
+  ArtistasIndexRoute: typeof ArtistasIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/radar': {
+      id: '/radar'
+      path: '/radar'
+      fullPath: '/radar'
+      preLoaderRoute: typeof RadarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hall': {
+      id: '/hall'
+      path: '/hall'
+      fullPath: '/hall'
+      preLoaderRoute: typeof HallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/charts': {
+      id: '/charts'
+      path: '/charts'
+      fullPath: '/charts'
+      preLoaderRoute: typeof ChartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +190,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/artistas/': {
+      id: '/artistas/'
+      path: '/artistas'
+      fullPath: '/artistas/'
+      preLoaderRoute: typeof ArtistasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artistas/$nome': {
+      id: '/artistas/$nome'
+      path: '/artistas/$nome'
+      fullPath: '/artistas/$nome'
+      preLoaderRoute: typeof ArtistasNomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acoes/tour': {
+      id: '/acoes/tour'
+      path: '/acoes/tour'
+      fullPath: '/acoes/tour'
+      preLoaderRoute: typeof AcoesTourRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acoes/musica': {
+      id: '/acoes/musica'
+      path: '/acoes/musica'
+      fullPath: '/acoes/musica'
+      preLoaderRoute: typeof AcoesMusicaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acoes/cinema': {
+      id: '/acoes/cinema'
+      path: '/acoes/cinema'
+      fullPath: '/acoes/cinema'
+      preLoaderRoute: typeof AcoesCinemaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acoes/album': {
+      id: '/acoes/album'
+      path: '/acoes/album'
+      fullPath: '/acoes/album'
+      preLoaderRoute: typeof AcoesAlbumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChartsRoute: ChartsRoute,
+  HallRoute: HallRoute,
+  RadarRoute: RadarRoute,
+  AcoesAlbumRoute: AcoesAlbumRoute,
+  AcoesCinemaRoute: AcoesCinemaRoute,
+  AcoesMusicaRoute: AcoesMusicaRoute,
+  AcoesTourRoute: AcoesTourRoute,
+  ArtistasNomeRoute: ArtistasNomeRoute,
+  ArtistasIndexRoute: ArtistasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,26 +1,161 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Mic2, Trophy, Radio, Library, Star, Sparkles, AlertTriangle } from "lucide-react";
+import { useTelegramUser } from "@/lib/telegram";
+import { api, fmtEC, fmtMoney, driveImg, type Artist, type RadarItem } from "@/lib/api";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Index() {
+  const { user, ready } = useTelegramUser();
+  const [artists, setArtists] = useState<Artist[] | null>(null);
+  const [radar, setRadar] = useState<RadarItem[]>([]);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (user) api.meusArtistas(user.id).then(setArtists);
+    api.radar().then((r) => setRadar(r.slice(0, 6)));
+  }, [ready, user]);
+
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 6) return "Boa madrugada";
+    if (h < 12) return "Bom dia";
+    if (h < 18) return "Boa tarde";
+    return "Boa noite";
+  })();
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
+    <main
+      className="flex-1 mx-auto w-full max-w-2xl px-4 pt-6"
+      style={{ background: "var(--gradient-hero)" }}
     >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+      {/* Header */}
+      <header className="flex items-center justify-between mb-6">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Empire Hub</p>
+          <h1 className="text-2xl font-extrabold mt-1">
+            {greeting}{user?.name ? `, ${user.name}` : ""}
+          </h1>
+        </div>
+        {user && (
+          <div className="size-10 rounded-full bg-primary text-primary-foreground grid place-items-center font-black text-sm">
+            {(user.name?.[0] || "U").toUpperCase()}
+          </div>
+        )}
+      </header>
+
+      {!user && ready && (
+        <div className="rounded-2xl border border-destructive/40 bg-destructive/10 p-4 mb-6 flex gap-3">
+          <AlertTriangle className="size-5 text-destructive shrink-0 mt-0.5" />
+          <div className="text-sm">
+            <p className="font-bold mb-1">ID do Telegram não detectado.</p>
+            <p className="text-muted-foreground">
+              Abra este app pelo bot do Telegram, ou adicione <code className="bg-secondary px-1 rounded">?tg_id=SEU_ID</code> na URL para testar.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Quick grid — Spotify-style shortcut tiles */}
+      <section className="grid grid-cols-2 gap-3 mb-8">
+        <ShortcutTile to="/artistas" label="Meus Artistas" icon={<Library className="size-5" />} />
+        <ShortcutTile to="/charts" label="Top Charts" icon={<Trophy className="size-5" />} />
+        <ShortcutTile to="/radar" label="Radar" icon={<Radio className="size-5" />} />
+        <ShortcutTile to="/hall" label="Hall da Fama" icon={<Star className="size-5" />} />
+      </section>
+
+      {/* Meus artistas — horizontal */}
+      {user && (
+        <section className="mb-8">
+          <SectionHeader title="Seus artistas" linkTo="/artistas" />
+          {artists === null ? (
+            <Skeleton h={150} />
+          ) : artists.length === 0 ? (
+            <EmptyCard>Você ainda não gerencia nenhum artista.</EmptyCard>
+          ) : (
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2">
+              {artists.map((a) => (
+                <Link
+                  key={a.nome}
+                  to="/artistas/$nome"
+                  params={{ nome: a.nome }}
+                  className="shrink-0 w-36"
+                >
+                  <div className="aspect-square rounded-xl overflow-hidden bg-secondary mb-2 shadow-lg">
+                    <img src={driveImg(a.foto)} alt={a.nome} loading="lazy" className="w-full h-full object-cover" />
+                  </div>
+                  <p className="font-bold text-sm truncate">{a.nome}</p>
+                  <p className="text-xs text-muted-foreground">{fmtEC(a.saldo)}</p>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Radar mini-feed */}
+      <section className="mb-8">
+        <SectionHeader title="Acontecendo agora" linkTo="/radar" />
+        {radar.length === 0 ? (
+          <Skeleton h={80} />
+        ) : (
+          <ul className="space-y-2">
+            {radar.map((r, i) => (
+              <li key={i} className="flex items-center gap-3 p-2 rounded-xl bg-card">
+                <img src={driveImg(r.foto)} alt={r.nome} loading="lazy" className="size-12 rounded-lg object-cover bg-secondary" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold truncate">{r.nome}</p>
+                  <p className="text-xs text-muted-foreground truncate">{r.acao}</p>
+                </div>
+                <span className="text-[10px] text-muted-foreground/70 shrink-0">{r.timestamp.split(" ")[1]}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <p className="text-center text-xs text-muted-foreground/60 py-6 flex items-center justify-center gap-1">
+        <Sparkles className="size-3" /> Empire RPG • Music Industry Game
+      </p>
+    </main>
+  );
+}
+
+function ShortcutTile({ to, label, icon }: { to: string; label: string; icon: React.ReactNode }) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center gap-3 p-3 rounded-xl bg-card hover:bg-secondary transition-colors group"
+    >
+      <div className="size-12 rounded-lg bg-primary/15 text-primary grid place-items-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+        {icon}
+      </div>
+      <span className="font-bold text-sm">{label}</span>
+    </Link>
+  );
+}
+
+function SectionHeader({ title, linkTo }: { title: string; linkTo?: string }) {
+  return (
+    <div className="flex items-baseline justify-between mb-3">
+      <h2 className="text-lg font-extrabold">{title}</h2>
+      {linkTo && (
+        <Link to={linkTo} className="text-xs uppercase tracking-wider text-muted-foreground font-bold hover:text-foreground">
+          Ver tudo
+        </Link>
+      )}
     </div>
   );
 }
 
-function Index() {
-  return <PlaceholderIndex />;
+function Skeleton({ h }: { h: number }) {
+  return <div className="rounded-xl bg-card animate-pulse" style={{ height: h }} />;
+}
+
+function EmptyCard({ children }: { children: React.ReactNode }) {
+  return <div className="rounded-xl bg-card p-6 text-center text-sm text-muted-foreground">{children}</div>;
 }
