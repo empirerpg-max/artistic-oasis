@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Mic2, Trophy, Radio, Library, Star, Sparkles, AlertTriangle } from "lucide-react";
+import { Mic2, Trophy, Radio, Library, Star, Sparkles, AlertTriangle, Crown, Building2 } from "lucide-react";
 import { useTelegramUser } from "@/lib/telegram";
 import { api, fmtEC, fmtMoney, driveImg, type Artist, type RadarItem } from "@/lib/api";
 
@@ -64,6 +64,8 @@ function Index() {
       <section className="grid grid-cols-2 gap-3 mb-8">
         <ShortcutTile to="/artistas" label="Meus Artistas" icon={<Library className="size-5" />} />
         <ShortcutTile to="/charts" label="Top Charts" icon={<Trophy className="size-5" />} />
+        <ShortcutTile to="/ranking" label="Ranking" icon={<Crown className="size-5" />} />
+        <ShortcutTile to="/gravadoras" label="Gravadoras" icon={<Building2 className="size-5" />} />
         <ShortcutTile to="/radar" label="Radar" icon={<Radio className="size-5" />} />
         <ShortcutTile to="/hall" label="Hall da Fama" icon={<Star className="size-5" />} />
       </section>
@@ -86,7 +88,13 @@ function Index() {
                   className="shrink-0 w-36"
                 >
                   <div className="aspect-square rounded-xl overflow-hidden bg-secondary mb-2 shadow-lg">
-                    <img src={driveImg(a.foto)} alt={a.nome} loading="lazy" className="w-full h-full object-cover" />
+                    <img
+                      src={driveImg(a.foto, 300)}
+                      alt={a.nome}
+                      loading="lazy"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <p className="font-bold text-sm truncate">{a.nome}</p>
                   <p className="text-xs text-muted-foreground">{fmtEC(a.saldo)}</p>
@@ -106,7 +114,13 @@ function Index() {
           <ul className="space-y-2">
             {radar.map((r, i) => (
               <li key={i} className="flex items-center gap-3 p-2 rounded-xl bg-card">
-                <img src={driveImg(r.foto)} alt={r.nome} loading="lazy" className="size-12 rounded-lg object-cover bg-secondary" />
+                <img
+                  src={driveImg(r.foto, 120)}
+                  alt={r.nome}
+                  loading="lazy"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden"; }}
+                  className="size-12 rounded-lg object-cover bg-secondary"
+                />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold truncate">{r.nome}</p>
                   <p className="text-xs text-muted-foreground truncate">{r.acao}</p>
