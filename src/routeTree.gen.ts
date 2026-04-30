@@ -16,7 +16,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArtistasIndexRouteImport } from './routes/artistas.index'
 import { Route as ArtistasNomeRouteImport } from './routes/artistas.$nome'
 import { Route as AcoesTourRouteImport } from './routes/acoes.tour'
-import { Route as AcoesMusicaRouteImport } from './routes/acoes.musica'
 import { Route as AcoesCinemaRouteImport } from './routes/acoes.cinema'
 import { Route as AcoesAlbumRouteImport } from './routes/acoes.album'
 
@@ -55,11 +54,6 @@ const AcoesTourRoute = AcoesTourRouteImport.update({
   path: '/acoes/tour',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AcoesMusicaRoute = AcoesMusicaRouteImport.update({
-  id: '/acoes/musica',
-  path: '/acoes/musica',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AcoesCinemaRoute = AcoesCinemaRouteImport.update({
   id: '/acoes/cinema',
   path: '/acoes/cinema',
@@ -78,7 +72,6 @@ export interface FileRoutesByFullPath {
   '/radar': typeof RadarRoute
   '/acoes/album': typeof AcoesAlbumRoute
   '/acoes/cinema': typeof AcoesCinemaRoute
-  '/acoes/musica': typeof AcoesMusicaRoute
   '/acoes/tour': typeof AcoesTourRoute
   '/artistas/$nome': typeof ArtistasNomeRoute
   '/artistas/': typeof ArtistasIndexRoute
@@ -90,7 +83,6 @@ export interface FileRoutesByTo {
   '/radar': typeof RadarRoute
   '/acoes/album': typeof AcoesAlbumRoute
   '/acoes/cinema': typeof AcoesCinemaRoute
-  '/acoes/musica': typeof AcoesMusicaRoute
   '/acoes/tour': typeof AcoesTourRoute
   '/artistas/$nome': typeof ArtistasNomeRoute
   '/artistas': typeof ArtistasIndexRoute
@@ -103,7 +95,6 @@ export interface FileRoutesById {
   '/radar': typeof RadarRoute
   '/acoes/album': typeof AcoesAlbumRoute
   '/acoes/cinema': typeof AcoesCinemaRoute
-  '/acoes/musica': typeof AcoesMusicaRoute
   '/acoes/tour': typeof AcoesTourRoute
   '/artistas/$nome': typeof ArtistasNomeRoute
   '/artistas/': typeof ArtistasIndexRoute
@@ -117,7 +108,6 @@ export interface FileRouteTypes {
     | '/radar'
     | '/acoes/album'
     | '/acoes/cinema'
-    | '/acoes/musica'
     | '/acoes/tour'
     | '/artistas/$nome'
     | '/artistas/'
@@ -129,7 +119,6 @@ export interface FileRouteTypes {
     | '/radar'
     | '/acoes/album'
     | '/acoes/cinema'
-    | '/acoes/musica'
     | '/acoes/tour'
     | '/artistas/$nome'
     | '/artistas'
@@ -141,7 +130,6 @@ export interface FileRouteTypes {
     | '/radar'
     | '/acoes/album'
     | '/acoes/cinema'
-    | '/acoes/musica'
     | '/acoes/tour'
     | '/artistas/$nome'
     | '/artistas/'
@@ -154,7 +142,6 @@ export interface RootRouteChildren {
   RadarRoute: typeof RadarRoute
   AcoesAlbumRoute: typeof AcoesAlbumRoute
   AcoesCinemaRoute: typeof AcoesCinemaRoute
-  AcoesMusicaRoute: typeof AcoesMusicaRoute
   AcoesTourRoute: typeof AcoesTourRoute
   ArtistasNomeRoute: typeof ArtistasNomeRoute
   ArtistasIndexRoute: typeof ArtistasIndexRoute
@@ -211,13 +198,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcoesTourRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/acoes/musica': {
-      id: '/acoes/musica'
-      path: '/acoes/musica'
-      fullPath: '/acoes/musica'
-      preLoaderRoute: typeof AcoesMusicaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/acoes/cinema': {
       id: '/acoes/cinema'
       path: '/acoes/cinema'
@@ -242,7 +222,6 @@ const rootRouteChildren: RootRouteChildren = {
   RadarRoute: RadarRoute,
   AcoesAlbumRoute: AcoesAlbumRoute,
   AcoesCinemaRoute: AcoesCinemaRoute,
-  AcoesMusicaRoute: AcoesMusicaRoute,
   AcoesTourRoute: AcoesTourRoute,
   ArtistasNomeRoute: ArtistasNomeRoute,
   ArtistasIndexRoute: ArtistasIndexRoute,
