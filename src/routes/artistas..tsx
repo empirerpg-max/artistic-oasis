@@ -4,7 +4,7 @@ import { ChevronLeft, Mic2, Film, Disc3, Wallet, Trophy, Zap, Briefcase, Flame, 
 import { useTelegramUser } from "@/lib/telegram";
 import { api, fmtEC, fmtMoney, driveImg, type Artist } from "@/lib/api";
 
-export const Route = createFileRoute("/artistas/$nome")({
+export const Route = createFileRoute("/artistas/")({
   component: ArtistDashboard,
 });
 
