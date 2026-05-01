@@ -58,6 +58,31 @@ export interface AlbumPayload {
   telegram_id?: string;
 }
 
+export interface MarketItem {
+  categoria: string;        // MARKET, IMOVEIS, CARREIRA, ...
+  item: string;             // "Mansao", "Convite Met Gala"...
+  preco: number;            // EC
+  efeito: string;           // descrição livre
+}
+
+export interface MuralItem {
+  id: string;
+  vendedor: string;
+  titulo: string;
+  teaser: string;
+  preco: number;
+}
+
+export interface BemItem {
+  id?: string;
+  artista: string;
+  categoria: string;
+  item: string;
+  valor: number;            // valor de compra ($)
+  data: string;             // ISO
+  status?: string;          // Ativo / Vendido
+}
+
 function qs(params: Record<string, string | number | undefined>) {
   const u = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
@@ -151,6 +176,37 @@ export const api = {
   },
   async filantropia(nome: string, causa: string, valor: string) {
     return call({ acao: "filantropia", artista: nome, causa, valor });
+  },
+
+  // ---- Empire Market ----
+  async listarMarket(): Promise<MarketItem[]> {
+    const r = await call<any[]>({ acao: "listar_market" }, { cache: true });
+    return Array.isArray(r) ? r.map((x) => ({
+      categoria: String(x.categoria || ""),
+      item: String(x.item || ""),
+      preco: Number(x.preco || 0),
+      efeito: String(x.efeito || ""),
+    })) : [];
+  },
+  async listarMural(): Promise<MuralItem[]> {
+    const r = await call<any[]>({ acao: "mural" }, { cache: true });
+    return Array.isArray(r) ? r : [];
+  },
+  async comprarMarket(p: { nome: string; categoria: string; item: string }) {
+    invalidateCache();
+    return call({ acao: "comprar_market", nome: p.nome, categoria: p.categoria, item: p.item });
+  },
+  async comprarMural(p: { nome: string; id: string }) {
+    invalidateCache();
+    return call({ acao: "comprar_item", nome: p.nome, id: p.id });
+  },
+  async meusBens(nome: string): Promise<BemItem[]> {
+    const r = await call<any[]>({ acao: "meus_bens", nome }, { cache: true });
+    return Array.isArray(r) ? r : [];
+  },
+  async venderBem(p: { nome: string; id: string }) {
+    invalidateCache();
+    return call({ acao: "vender_bem", nome: p.nome, id: p.id });
   },
 
   // ---- Álbuns (novos endpoints — código pra colar no Apps Script) ----

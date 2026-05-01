@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Mic2, Trophy, Radio, Library, Star, Sparkles, AlertTriangle, Crown, Building2 } from "lucide-react";
+import { Trophy, Radio, Library, Star, Sparkles, AlertTriangle, Crown, Building2, ShoppingBag } from "lucide-react";
 import { useTelegramUser } from "@/lib/telegram";
 import { api, fmtEC, fmtMoney, driveImg, type Artist, type RadarItem } from "@/lib/api";
 
@@ -64,6 +64,7 @@ function Index() {
       <section className="grid grid-cols-2 gap-3 mb-8">
         <ShortcutTile to="/artistas" label="Meus Artistas" icon={<Library className="size-5" />} />
         <ShortcutTile to="/charts" label="Top Charts" icon={<Trophy className="size-5" />} />
+        <ShortcutTile to="/market" label="Empire Market" icon={<ShoppingBag className="size-5" />} />
         <ShortcutTile to="/ranking" label="Ranking" icon={<Crown className="size-5" />} />
         <ShortcutTile to="/gravadoras" label="Gravadoras" icon={<Building2 className="size-5" />} />
         <ShortcutTile to="/radar" label="Radar" icon={<Radio className="size-5" />} />
