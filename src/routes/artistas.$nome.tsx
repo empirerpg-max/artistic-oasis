@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ChevronLeft, Mic2, Film, Disc3, Wallet, Trophy, Zap, Briefcase, Flame, HandHeart, X, Loader2 } from "lucide-react";
+import { ChevronLeft, Mic2, Film, Disc3, Wallet, Trophy, Zap, Briefcase, Flame, HandHeart, X, Loader2, ShoppingBag, Building2 } from "lucide-react";
 import { useTelegramUser } from "@/lib/telegram";
 import { api, fmtEC, fmtMoney, driveImg, type Artist } from "@/lib/api";
 
@@ -84,6 +84,8 @@ function ArtistDashboard() {
             <ActionButton onClick={() => setModal("viral")} icon={<Flame className="size-5" />} label="Viral" />
             <ActionButton onClick={() => setModal("filantropia")} icon={<HandHeart className="size-5" />} label="Filantropia" />
             <ProjectsLink nome={artist.nome} />
+            <BensLink nome={artist.nome} />
+            <MarketLink />
           </div>
         </section>
       </div>
@@ -137,6 +139,24 @@ function ProjectsLink({ nome }: { nome: string }) {
       className="flex items-center gap-3 p-3 rounded-xl bg-card hover:bg-secondary transition-colors">
       <div className="size-10 rounded-lg bg-primary/15 text-primary grid place-items-center"><Briefcase className="size-5" /></div>
       <span className="font-bold text-sm">Projetos</span>
+    </Link>
+  );
+}
+function BensLink({ nome }: { nome: string }) {
+  return (
+    <Link to="/artistas/$nome/bens" params={{ nome }}
+      className="flex items-center gap-3 p-3 rounded-xl bg-card hover:bg-secondary transition-colors">
+      <div className="size-10 rounded-lg bg-primary/15 text-primary grid place-items-center"><Building2 className="size-5" /></div>
+      <span className="font-bold text-sm">Meus Bens</span>
+    </Link>
+  );
+}
+function MarketLink() {
+  return (
+    <Link to="/market"
+      className="flex items-center gap-3 p-3 rounded-xl bg-card hover:bg-secondary transition-colors">
+      <div className="size-10 rounded-lg bg-primary/15 text-primary grid place-items-center"><ShoppingBag className="size-5" /></div>
+      <span className="font-bold text-sm">Empire Market</span>
     </Link>
   );
 }
