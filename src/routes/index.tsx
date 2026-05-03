@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Trophy, Radio, Library, Star, Sparkles, AlertTriangle, Crown, Building2, ShoppingBag } from "lucide-react";
+import { Radio, Library, Star, Sparkles, AlertTriangle, Crown, Building2, ShoppingBag, Film, HandHeart, Dice5, Gavel } from "lucide-react";
+import { toast } from "sonner";
 import { useTelegramUser } from "@/lib/telegram";
 import { api, fmtEC, fmtMoney, driveImg, type Artist, type RadarItem } from "@/lib/api";
 
@@ -63,12 +64,16 @@ function Index() {
       {/* Quick grid — Spotify-style shortcut tiles */}
       <section className="grid grid-cols-2 gap-3 mb-8">
         <ShortcutTile to="/artistas" label="Meus Artistas" icon={<Library className="size-5" />} />
-        <ShortcutTile to="/charts" label="Top Charts" icon={<Trophy className="size-5" />} />
+        <ShortcutTile to="/charts" label="Império" icon={<Crown className="size-5" />} />
         <ShortcutTile to="/market" label="Empire Market" icon={<ShoppingBag className="size-5" />} />
-        <ShortcutTile to="/ranking" label="Ranking" icon={<Crown className="size-5" />} />
+        <ShortcutTile to="/ranking" label="Ranking" icon={<Star className="size-5" />} />
         <ShortcutTile to="/gravadoras" label="Gravadoras" icon={<Building2 className="size-5" />} />
         <ShortcutTile to="/radar" label="Radar" icon={<Radio className="size-5" />} />
         <ShortcutTile to="/hall" label="Hall da Fama" icon={<Star className="size-5" />} />
+        <ShortcutTile label="Cinema & TV" icon={<Film className="size-5" />} comingSoon />
+        <ShortcutTile label="Filantropia" icon={<HandHeart className="size-5" />} comingSoon />
+        <ShortcutTile label="Empire Bets" icon={<Dice5 className="size-5" />} comingSoon />
+        <ShortcutTile label="Leilão" icon={<Gavel className="size-5" />} comingSoon />
       </section>
 
       {/* Meus artistas — horizontal */}
@@ -140,7 +145,23 @@ function Index() {
   );
 }
 
-function ShortcutTile({ to, label, icon }: { to: string; label: string; icon: React.ReactNode }) {
+function ShortcutTile({ to, label, icon, comingSoon }: { to?: string; label: string; icon: React.ReactNode; comingSoon?: boolean }) {
+  if (comingSoon || !to) {
+    return (
+      <button
+        onClick={() => toast(label + " — em breve", { description: "Estamos trabalhando nessa tela." })}
+        className="flex items-center gap-3 p-3 rounded-xl bg-card/60 hover:bg-secondary transition-colors text-left relative overflow-hidden"
+      >
+        <div className="size-12 rounded-lg bg-muted/40 text-muted-foreground grid place-items-center">
+          {icon}
+        </div>
+        <div className="min-w-0">
+          <span className="block font-bold text-sm truncate">{label}</span>
+          <span className="block text-[9px] uppercase font-bold tracking-wider text-muted-foreground/70">Em breve</span>
+        </div>
+      </button>
+    );
+  }
   return (
     <Link
       to={to}

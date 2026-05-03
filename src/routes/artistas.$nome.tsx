@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, Mic2, Film, Disc3, Wallet, Trophy, Zap, Briefcase, Flame, HandHeart, X, Loader2, ShoppingBag, Building2 } from "lucide-react";
 import { useTelegramUser } from "@/lib/telegram";
 import { api, fmtEC, fmtMoney, driveImg, type Artist } from "@/lib/api";
+import { notify } from "@/lib/notify";
 
 export const Route = createFileRoute("/artistas/$nome")({
   component: ArtistDashboard,
@@ -178,13 +179,13 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
 function ViralModal({ nome, onClose }: { nome: string; onClose: () => void }) {
   const [musica, setMusica] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
   async function go() {
     if (!musica) return;
-    setSubmitting(true); setResult(null);
+    setSubmitting(true);
     const r: any = await api.viral(nome, musica);
-    setResult(typeof r === "string" ? r : (r.message || JSON.stringify(r)));
+    const { ok } = notify(r, { successFallback: "Boost ativado!" });
     setSubmitting(false);
+    if (ok) onClose();
   }
   return (
     <Modal title="Viralizar música" onClose={onClose}>
@@ -195,7 +196,6 @@ function ViralModal({ nome, onClose }: { nome: string; onClose: () => void }) {
         className="w-full py-3 rounded-full bg-primary text-primary-foreground font-extrabold uppercase tracking-wider text-sm disabled:opacity-50 inline-flex items-center justify-center gap-2">
         {submitting && <Loader2 className="size-4 animate-spin" />} Confirmar
       </button>
-      {result && <p className="text-xs mt-3 whitespace-pre-wrap">{result}</p>}
     </Modal>
   );
 }
@@ -204,13 +204,13 @@ function FilantropiaModal({ nome, onClose }: { nome: string; onClose: () => void
   const [causa, setCausa] = useState("");
   const [valor, setValor] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
   async function go() {
     if (!causa || !valor) return;
-    setSubmitting(true); setResult(null);
+    setSubmitting(true);
     const r: any = await api.filantropia(nome, causa, valor);
-    setResult(typeof r === "string" ? r : (r.message || JSON.stringify(r)));
+    const { ok } = notify(r, { successFallback: "Doação enviada!" });
     setSubmitting(false);
+    if (ok) onClose();
   }
   return (
     <Modal title="Filantropia" onClose={onClose}>
@@ -223,7 +223,6 @@ function FilantropiaModal({ nome, onClose }: { nome: string; onClose: () => void
         className="w-full py-3 rounded-full bg-primary text-primary-foreground font-extrabold uppercase tracking-wider text-sm disabled:opacity-50 inline-flex items-center justify-center gap-2">
         {submitting && <Loader2 className="size-4 animate-spin" />} Doar
       </button>
-      {result && <p className="text-xs mt-3 whitespace-pre-wrap">{result}</p>}
     </Modal>
   );
 }

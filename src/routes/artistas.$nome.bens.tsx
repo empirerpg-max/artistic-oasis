@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Building2, Sparkles, Briefcase, Loader2 } from "lucide-react";
 import { api, fmtEC, fmtMoney, type BemItem } from "@/lib/api";
+import { notify } from "@/lib/notify";
 
 export const Route = createFileRoute("/artistas/$nome/bens")({
   component: BensPage,
@@ -17,14 +18,16 @@ function BensPage() {
   const { nome } = Route.useParams();
   const [bens, setBens] = useState<BemItem[] | null>(null);
   const [selling, setSelling] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   useEffect(() => { api.meusBens(nome).then(setBens); }, [nome]);
 
   async function vender(id: string) {
-    if (!confirm("Vender este bem? Você recebe ~70% do valor de compra.")) return;
     setSelling(id);
-    await api.venderBem({ nome, id });
+    const r = await api.venderBem({ nome, id });
+    notify(r, { successFallback: "Bem vendido." });
     setSelling(null);
+    setConfirmId(null);
     api.meusBens(nome).then(setBens);
   }
 
@@ -42,9 +45,7 @@ function BensPage() {
         {bens === null ? (
           <div className="rounded-xl bg-card animate-pulse h-32" />
         ) : bens.length === 0 ? (
-          <div className="rounded-xl bg-card p-6 text-center text-sm text-muted-foreground">
-            Nenhum bem ainda. Vá ao <Link to="/market" className="text-primary font-bold">Empire Market</Link>.
-          </div>
+          <EmptyBens nome={nome} />
         ) : (
           bens.map((b, i) => {
             const id = b.id || String(i);
@@ -60,7 +61,7 @@ function BensPage() {
                   <p className="text-sm font-bold text-primary">{fmtEC(b.valor)}</p>
                 </div>
                 {ativo && b.id && (
-                  <button onClick={() => vender(b.id!)} disabled={selling === b.id}
+                  <button onClick={() => setConfirmId(b.id!)} disabled={selling === b.id}
                     className="px-3 py-2 rounded-full bg-secondary text-xs font-bold inline-flex items-center gap-1.5 disabled:opacity-50">
                     {selling === b.id ? <Loader2 className="size-3 animate-spin" /> : null} Vender
                   </button>
@@ -71,6 +72,57 @@ function BensPage() {
           })
         )}
       </div>
+
+      {confirmId && (
+        <ConfirmSell
+          item={bens?.find((b) => b.id === confirmId)}
+          onCancel={() => setConfirmId(null)}
+          onConfirm={() => vender(confirmId)}
+          loading={selling === confirmId}
+        />
+      )}
     </main>
+  );
+}
+
+function EmptyBens({ nome: _nome }: { nome: string }) {
+  return (
+    <div className="rounded-2xl bg-card p-8 text-center">
+      <div className="size-14 rounded-full bg-primary/15 text-primary grid place-items-center mx-auto mb-3">
+        <Building2 className="size-6" />
+      </div>
+      <p className="font-extrabold mb-1">Nenhum bem ainda</p>
+      <p className="text-xs text-muted-foreground mb-4">
+        Quando você comprar imóveis, mansões ou itens duráveis no Empire Market, eles aparecem aqui como patrimônio.
+      </p>
+      <Link to="/market" className="inline-block px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-extrabold uppercase tracking-wider">
+        Ir ao Empire Market
+      </Link>
+    </div>
+  );
+}
+
+function ConfirmSell({ item, onCancel, onConfirm, loading }: {
+  item?: BemItem; onCancel: () => void; onConfirm: () => void; loading: boolean;
+}) {
+  if (!item) return null;
+  const retorno = Math.floor(item.valor * 0.7);
+  return (
+    <div onClick={onCancel} className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm grid place-items-end sm:place-items-center p-0 sm:p-4">
+      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md bg-card rounded-t-2xl sm:rounded-2xl p-5 border border-border">
+        <h3 className="text-lg font-extrabold mb-1">Vender este bem?</h3>
+        <p className="text-sm text-muted-foreground mb-4">{item.item}</p>
+        <div className="rounded-xl bg-background p-4 mb-4 space-y-1">
+          <div className="flex justify-between text-sm"><span className="text-muted-foreground">Pagou</span><span className="font-bold">{fmtEC(item.valor)}</span></div>
+          <div className="flex justify-between text-sm"><span className="text-muted-foreground">Você recebe (70%)</span><span className="font-black text-primary">{fmtEC(retorno)}</span></div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <button onClick={onCancel} className="py-3 rounded-full bg-secondary font-bold text-sm uppercase tracking-wider">Cancelar</button>
+          <button onClick={onConfirm} disabled={loading} className="py-3 rounded-full bg-primary text-primary-foreground font-extrabold text-sm uppercase tracking-wider disabled:opacity-50 inline-flex items-center justify-center gap-2">
+            {loading && <Loader2 className="size-4 animate-spin" />} Vender
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

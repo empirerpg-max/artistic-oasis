@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Trophy } from "lucide-react";
+import { Crown } from "lucide-react";
 import { api, fmtMoney, driveImg, type Artist } from "@/lib/api";
 
 export const Route = createFileRoute("/charts")({
@@ -22,10 +22,10 @@ function Charts() {
   return (
     <main className="flex-1 mx-auto w-full max-w-2xl px-4 pt-6">
       <header className="mb-5 flex items-center gap-3">
-        <Trophy className="size-7 text-primary" />
+        <Crown className="size-7 text-primary" />
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Empire</p>
-          <h1 className="text-3xl font-extrabold">Charts Globais</h1>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">O estado do</p>
+          <h1 className="text-3xl font-extrabold">Império</h1>
         </div>
       </header>
 
