@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ShoppingBag, Loader2, X, Music, Building2, Briefcase, Sparkles, Plane } from "lucide-react";
 import { useTelegramUser } from "@/lib/telegram";
 import { api, fmtEC, type MarketItem, type MuralItem, type Artist } from "@/lib/api";
+import { notify } from "@/lib/notify";
 
 export const Route = createFileRoute("/market")({
   component: MarketPage,
@@ -186,7 +187,6 @@ function BuyModal({ buying, artists, onClose, onSuccess }: {
 }) {
   const [nome, setNome] = useState<string>(artists[0]?.nome || "");
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
 
   const titulo = buying.kind === "market" ? buying.item.item : buying.item.titulo;
   const preco = buying.kind === "market" ? buying.item.preco : buying.item.preco;
@@ -197,14 +197,13 @@ function BuyModal({ buying, artists, onClose, onSuccess }: {
 
   async function go() {
     if (!nome) return;
-    setSubmitting(true); setResult(null);
+    setSubmitting(true);
     const r: any = buying.kind === "market"
       ? await api.comprarMarket({ nome, categoria: buying.item.categoria, item: buying.item.item })
       : await api.comprarMural({ nome, id: buying.item.id });
-    const msg = typeof r === "string" ? r : (r.message || r.msg || JSON.stringify(r));
-    setResult(msg);
+    const { ok } = notify(r, { successFallback: "Compra confirmada!" });
     setSubmitting(false);
-    if (typeof msg === "string" && msg.startsWith("✅")) setTimeout(onSuccess, 1200);
+    if (ok) onSuccess();
   }
 
   return (
@@ -239,7 +238,6 @@ function BuyModal({ buying, artists, onClose, onSuccess }: {
           className="w-full py-3 rounded-full bg-primary text-primary-foreground font-extrabold uppercase tracking-wider text-sm disabled:opacity-50 inline-flex items-center justify-center gap-2 mt-2">
           {submitting && <Loader2 className="size-4 animate-spin" />} Confirmar compra
         </button>
-        {result && <p className="text-xs mt-3 whitespace-pre-wrap">{result}</p>}
       </div>
     </div>
   );

@@ -25,7 +25,18 @@ function Projetos() {
       {items === null ? (
         <div className="space-y-2">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-16 rounded-xl bg-card animate-pulse" />)}</div>
       ) : items.length === 0 ? (
-        <p className="text-center text-sm text-muted-foreground py-12">Nenhum projeto ativo.</p>
+        <div className="rounded-2xl bg-card p-8 text-center mt-2">
+          <div className="size-14 rounded-full bg-primary/15 text-primary grid place-items-center mx-auto mb-3">
+            <Briefcase className="size-6" />
+          </div>
+          <p className="font-extrabold mb-1">Nenhum projeto ainda</p>
+          <p className="text-xs text-muted-foreground mb-4">
+            Filmes, séries e blockbusters de <span className="font-bold text-foreground">{nome}</span> aparecem aqui depois de lançados.
+          </p>
+          <Link to="/acoes/cinema" search={{ nome } as any} className="inline-block px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-extrabold uppercase tracking-wider">
+            Lançar Cinema/TV
+          </Link>
+        </div>
       ) : (
         <ul className="space-y-2">
           {items.map((p, i) => (

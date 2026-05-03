@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useLocation } from "@tanstack/react-router";
-import { Home, Search, Library, Radio } from "lucide-react";
+import { Home, Crown, Library, Radio } from "lucide-react";
+import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
 
@@ -83,6 +84,7 @@ function RootComponent() {
     <div className="min-h-screen flex flex-col bg-background pb-24">
       <Outlet />
       <BottomNav />
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 }
@@ -92,7 +94,7 @@ function BottomNav() {
   const items = [
     { to: "/", label: "Início", icon: Home },
     { to: "/artistas", label: "Artistas", icon: Library },
-    { to: "/charts", label: "Charts", icon: Search },
+    { to: "/charts", label: "Império", icon: Crown },
     { to: "/radar", label: "Radar", icon: Radio },
   ];
   return (
