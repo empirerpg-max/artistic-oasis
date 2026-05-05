@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as RadarRouteImport } from './routes/radar'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as LeiloesRouteImport } from './routes/leiloes'
 import { Route as HallRouteImport } from './routes/hall'
 import { Route as GravadorasRouteImport } from './routes/gravadoras'
 import { Route as ChartsRouteImport } from './routes/charts'
@@ -38,6 +39,11 @@ const RadarRoute = RadarRouteImport.update({
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeiloesRoute = LeiloesRouteImport.update({
+  id: '/leiloes',
+  path: '/leiloes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HallRoute = HallRouteImport.update({
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/charts': typeof ChartsRoute
   '/gravadoras': typeof GravadorasRoute
   '/hall': typeof HallRoute
+  '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/charts': typeof ChartsRoute
   '/gravadoras': typeof GravadorasRoute
   '/hall': typeof HallRoute
+  '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/charts': typeof ChartsRoute
   '/gravadoras': typeof GravadorasRoute
   '/hall': typeof HallRoute
+  '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/gravadoras'
     | '/hall'
+    | '/leiloes'
     | '/market'
     | '/radar'
     | '/ranking'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/gravadoras'
     | '/hall'
+    | '/leiloes'
     | '/market'
     | '/radar'
     | '/ranking'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/gravadoras'
     | '/hall'
+    | '/leiloes'
     | '/market'
     | '/radar'
     | '/ranking'
@@ -212,6 +224,7 @@ export interface RootRouteChildren {
   ChartsRoute: typeof ChartsRoute
   GravadorasRoute: typeof GravadorasRoute
   HallRoute: typeof HallRoute
+  LeiloesRoute: typeof LeiloesRoute
   MarketRoute: typeof MarketRoute
   RadarRoute: typeof RadarRoute
   RankingRoute: typeof RankingRoute
@@ -244,6 +257,13 @@ declare module '@tanstack/react-router' {
       path: '/market'
       fullPath: '/market'
       preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leiloes': {
+      id: '/leiloes'
+      path: '/leiloes'
+      fullPath: '/leiloes'
+      preLoaderRoute: typeof LeiloesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hall': {
@@ -352,6 +372,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChartsRoute: ChartsRoute,
   GravadorasRoute: GravadorasRoute,
   HallRoute: HallRoute,
+  LeiloesRoute: LeiloesRoute,
   MarketRoute: MarketRoute,
   RadarRoute: RadarRoute,
   RankingRoute: RankingRoute,

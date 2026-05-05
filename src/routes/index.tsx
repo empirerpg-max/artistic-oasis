@@ -73,7 +73,7 @@ function Index() {
         <ShortcutTile label="Cinema & TV" icon={<Film className="size-5" />} comingSoon />
         <ShortcutTile label="Filantropia" icon={<HandHeart className="size-5" />} comingSoon />
         <ShortcutTile label="Empire Bets" icon={<Dice5 className="size-5" />} comingSoon />
-        <ShortcutTile label="Leilão" icon={<Gavel className="size-5" />} comingSoon />
+        <ShortcutTile to="/leiloes" label="Leilões" icon={<Gavel className="size-5" />} />
       </section>
 
       {/* Meus artistas — horizontal */}

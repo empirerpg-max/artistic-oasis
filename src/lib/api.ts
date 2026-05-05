@@ -178,6 +178,36 @@ export const api = {
     return call({ acao: "filantropia", artista: nome, causa, valor });
   },
 
+  // ---- Mais ações ----
+  async publicarLeilao(p: { nome: string; descricao: string; lanceMini: number }) {
+    invalidateCache();
+    return call({ acao: "publicar_leilao", ...p });
+  },
+  async darLance(p: { nome: string; itemId: string | number; valor: number }) {
+    invalidateCache();
+    return call({ acao: "lance_leilao", ...p });
+  },
+  async listarLeiloes(): Promise<any[]> {
+    const r = await call<any[]>({ acao: "leilao" }, { cache: true });
+    return Array.isArray(r) ? r : [];
+  },
+  async payola(p: { nome: string; musica: string; valor: number }) {
+    invalidateCache();
+    return call({ acao: "payola", ...p });
+  },
+  async rescisao(p: { nome: string; destino: string }) {
+    invalidateCache();
+    return call({ acao: "rescisao", ...p });
+  },
+  async venderComposicao(p: { nome: string; titulo: string; preco: number }) {
+    invalidateCache();
+    return call({ acao: "vender_composicao", ...p });
+  },
+  async comprarImovel(p: { nome: string; tipo: string; cidade: string }) {
+    invalidateCache();
+    return call({ acao: "comprar_imovel", ...p });
+  },
+
   // ---- Empire Market ----
   async listarMarket(): Promise<MarketItem[]> {
     const r = await call<any[]>({ acao: "listar_market" }, { cache: true });
