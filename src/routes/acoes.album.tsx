@@ -161,6 +161,13 @@ function AlbumForm() {
                   <Input value={f.duracao || ""} onChange={(e) => updFaixa(i, { duracao: e.target.value })} placeholder="Duração 3:24" />
                 </div>
                 <Input value={f.drive_url} onChange={(e) => updFaixa(i, { drive_url: e.target.value })} placeholder="Link Drive do mp3" required />
+                <textarea
+                  value={f.letra || ""}
+                  onChange={(e) => updFaixa(i, { letra: e.target.value })}
+                  rows={3}
+                  placeholder="Letra da música (opcional)"
+                  className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-primary"
+                />
                 <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                   <Music2 className="size-3" /> O arquivo precisa estar como "Qualquer pessoa com o link" no Drive.
                 </div>
