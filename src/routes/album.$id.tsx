@@ -19,6 +19,7 @@ function AlbumPage() {
   const [album, setAlbum] = useState<AlbumPayload | null | undefined>(undefined);
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
   const [showEncarte, setShowEncarte] = useState<string | null>(null);
+  const [showLyrics, setShowLyrics] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => { api.getAlbum(id).then((a) => setAlbum(a)); }, [id]);
@@ -105,7 +106,13 @@ function AlbumPage() {
                   )}
                 </button>
                 <div className="min-w-0">
-                  <p className={`font-semibold truncate text-sm ${active ? "text-primary" : ""}`}>{f.titulo}</p>
+                  <button
+                    onClick={() => f.letra && setShowLyrics(i)}
+                    className={`font-semibold truncate text-sm text-left w-full ${active ? "text-primary" : ""} ${f.letra ? "hover:underline" : ""}`}
+                    title={f.letra ? "Ver letra" : ""}
+                  >
+                    {f.titulo}{f.letra ? " ♪" : ""}
+                  </button>
                   <p className="text-xs text-muted-foreground truncate">{f.artistas}</p>
                 </div>
                 <span className="text-xs text-muted-foreground tabular-nums">{f.duracao || "—"}</span>
@@ -158,6 +165,17 @@ function AlbumPage() {
       {showEncarte && (
         <div onClick={() => setShowEncarte(null)} className="fixed inset-0 z-50 bg-black/90 grid place-items-center p-4">
           <img src={driveImg(showEncarte, 1200)} alt="" className="max-w-full max-h-full rounded-lg" />
+        </div>
+      )}
+
+      {showLyrics !== null && album.faixas[showLyrics]?.letra && (
+        <div onClick={() => setShowLyrics(null)} className="fixed inset-0 z-50 bg-black/90 grid place-items-center p-4">
+          <div onClick={(e) => e.stopPropagation()} className="bg-card border border-border rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6">
+            <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Letra</p>
+            <h3 className="text-xl font-extrabold mb-4">{album.faixas[showLyrics].titulo}</h3>
+            <pre className="whitespace-pre-wrap text-sm font-sans text-foreground/90">{album.faixas[showLyrics].letra}</pre>
+            <button onClick={() => setShowLyrics(null)} className="mt-4 w-full py-2 rounded-full bg-primary text-primary-foreground text-sm font-bold">Fechar</button>
+          </div>
         </div>
       )}
 
