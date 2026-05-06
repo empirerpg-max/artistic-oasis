@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as RadarRouteImport } from './routes/radar'
+import { Route as PlaylistsRouteImport } from './routes/playlists'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as LeiloesRouteImport } from './routes/leiloes'
 import { Route as HallRouteImport } from './routes/hall'
@@ -35,6 +36,11 @@ const RankingRoute = RankingRouteImport.update({
 const RadarRoute = RadarRouteImport.update({
   id: '/radar',
   path: '/radar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaylistsRoute = PlaylistsRouteImport.update({
+  id: '/playlists',
+  path: '/playlists',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketRoute = MarketRouteImport.update({
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/hall': typeof HallRoute
   '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
+  '/playlists': typeof PlaylistsRoute
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
   '/acoes/album': typeof AcoesAlbumRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/hall': typeof HallRoute
   '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
+  '/playlists': typeof PlaylistsRoute
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
   '/acoes/album': typeof AcoesAlbumRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/hall': typeof HallRoute
   '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
+  '/playlists': typeof PlaylistsRoute
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
   '/acoes/album': typeof AcoesAlbumRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/hall'
     | '/leiloes'
     | '/market'
+    | '/playlists'
     | '/radar'
     | '/ranking'
     | '/acoes/album'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/hall'
     | '/leiloes'
     | '/market'
+    | '/playlists'
     | '/radar'
     | '/ranking'
     | '/acoes/album'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/hall'
     | '/leiloes'
     | '/market'
+    | '/playlists'
     | '/radar'
     | '/ranking'
     | '/acoes/album'
@@ -239,6 +251,7 @@ export interface RootRouteChildren {
   HallRoute: typeof HallRoute
   LeiloesRoute: typeof LeiloesRoute
   MarketRoute: typeof MarketRoute
+  PlaylistsRoute: typeof PlaylistsRoute
   RadarRoute: typeof RadarRoute
   RankingRoute: typeof RankingRoute
   AcoesAlbumRoute: typeof AcoesAlbumRoute
@@ -263,6 +276,13 @@ declare module '@tanstack/react-router' {
       path: '/radar'
       fullPath: '/radar'
       preLoaderRoute: typeof RadarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playlists': {
+      id: '/playlists'
+      path: '/playlists'
+      fullPath: '/playlists'
+      preLoaderRoute: typeof PlaylistsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market': {
@@ -395,6 +415,7 @@ const rootRouteChildren: RootRouteChildren = {
   HallRoute: HallRoute,
   LeiloesRoute: LeiloesRoute,
   MarketRoute: MarketRoute,
+  PlaylistsRoute: PlaylistsRoute,
   RadarRoute: RadarRoute,
   RankingRoute: RankingRoute,
   AcoesAlbumRoute: AcoesAlbumRoute,
