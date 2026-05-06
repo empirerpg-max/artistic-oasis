@@ -20,6 +20,7 @@ import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as AlbunsRouteImport } from './routes/albuns'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArtistasIndexRouteImport } from './routes/artistas.index'
+import { Route as PlaylistsIdRouteImport } from './routes/playlists.$id'
 import { Route as ArtistasNomeRouteImport } from './routes/artistas.$nome'
 import { Route as AlbumIdRouteImport } from './routes/album.$id'
 import { Route as AcoesTourRouteImport } from './routes/acoes.tour'
@@ -83,6 +84,11 @@ const ArtistasIndexRoute = ArtistasIndexRouteImport.update({
   path: '/artistas/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlaylistsIdRoute = PlaylistsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PlaylistsRoute,
+} as any)
 const ArtistasNomeRoute = ArtistasNomeRouteImport.update({
   id: '/artistas/$nome',
   path: '/artistas/$nome',
@@ -127,7 +133,7 @@ export interface FileRoutesByFullPath {
   '/hall': typeof HallRoute
   '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
-  '/playlists': typeof PlaylistsRoute
+  '/playlists': typeof PlaylistsRouteWithChildren
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
   '/acoes/album': typeof AcoesAlbumRoute
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/acoes/tour': typeof AcoesTourRoute
   '/album/$id': typeof AlbumIdRoute
   '/artistas/$nome': typeof ArtistasNomeRouteWithChildren
+  '/playlists/$id': typeof PlaylistsIdRoute
   '/artistas/': typeof ArtistasIndexRoute
   '/artistas/$nome/bens': typeof ArtistasNomeBensRoute
   '/artistas/$nome/projetos': typeof ArtistasNomeProjetosRoute
@@ -147,7 +154,7 @@ export interface FileRoutesByTo {
   '/hall': typeof HallRoute
   '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
-  '/playlists': typeof PlaylistsRoute
+  '/playlists': typeof PlaylistsRouteWithChildren
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
   '/acoes/album': typeof AcoesAlbumRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/acoes/tour': typeof AcoesTourRoute
   '/album/$id': typeof AlbumIdRoute
   '/artistas/$nome': typeof ArtistasNomeRouteWithChildren
+  '/playlists/$id': typeof PlaylistsIdRoute
   '/artistas': typeof ArtistasIndexRoute
   '/artistas/$nome/bens': typeof ArtistasNomeBensRoute
   '/artistas/$nome/projetos': typeof ArtistasNomeProjetosRoute
@@ -168,7 +176,7 @@ export interface FileRoutesById {
   '/hall': typeof HallRoute
   '/leiloes': typeof LeiloesRoute
   '/market': typeof MarketRoute
-  '/playlists': typeof PlaylistsRoute
+  '/playlists': typeof PlaylistsRouteWithChildren
   '/radar': typeof RadarRoute
   '/ranking': typeof RankingRoute
   '/acoes/album': typeof AcoesAlbumRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/acoes/tour': typeof AcoesTourRoute
   '/album/$id': typeof AlbumIdRoute
   '/artistas/$nome': typeof ArtistasNomeRouteWithChildren
+  '/playlists/$id': typeof PlaylistsIdRoute
   '/artistas/': typeof ArtistasIndexRoute
   '/artistas/$nome/bens': typeof ArtistasNomeBensRoute
   '/artistas/$nome/projetos': typeof ArtistasNomeProjetosRoute
@@ -198,6 +207,7 @@ export interface FileRouteTypes {
     | '/acoes/tour'
     | '/album/$id'
     | '/artistas/$nome'
+    | '/playlists/$id'
     | '/artistas/'
     | '/artistas/$nome/bens'
     | '/artistas/$nome/projetos'
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/acoes/tour'
     | '/album/$id'
     | '/artistas/$nome'
+    | '/playlists/$id'
     | '/artistas'
     | '/artistas/$nome/bens'
     | '/artistas/$nome/projetos'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/acoes/tour'
     | '/album/$id'
     | '/artistas/$nome'
+    | '/playlists/$id'
     | '/artistas/'
     | '/artistas/$nome/bens'
     | '/artistas/$nome/projetos'
@@ -251,7 +263,7 @@ export interface RootRouteChildren {
   HallRoute: typeof HallRoute
   LeiloesRoute: typeof LeiloesRoute
   MarketRoute: typeof MarketRoute
-  PlaylistsRoute: typeof PlaylistsRoute
+  PlaylistsRoute: typeof PlaylistsRouteWithChildren
   RadarRoute: typeof RadarRoute
   RankingRoute: typeof RankingRoute
   AcoesAlbumRoute: typeof AcoesAlbumRoute
@@ -341,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtistasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/playlists/$id': {
+      id: '/playlists/$id'
+      path: '/$id'
+      fullPath: '/playlists/$id'
+      preLoaderRoute: typeof PlaylistsIdRouteImport
+      parentRoute: typeof PlaylistsRoute
+    }
     '/artistas/$nome': {
       id: '/artistas/$nome'
       path: '/artistas/$nome'
@@ -393,6 +412,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PlaylistsRouteChildren {
+  PlaylistsIdRoute: typeof PlaylistsIdRoute
+}
+
+const PlaylistsRouteChildren: PlaylistsRouteChildren = {
+  PlaylistsIdRoute: PlaylistsIdRoute,
+}
+
+const PlaylistsRouteWithChildren = PlaylistsRoute._addFileChildren(
+  PlaylistsRouteChildren,
+)
+
 interface ArtistasNomeRouteChildren {
   ArtistasNomeBensRoute: typeof ArtistasNomeBensRoute
   ArtistasNomeProjetosRoute: typeof ArtistasNomeProjetosRoute
@@ -415,7 +446,7 @@ const rootRouteChildren: RootRouteChildren = {
   HallRoute: HallRoute,
   LeiloesRoute: LeiloesRoute,
   MarketRoute: MarketRoute,
-  PlaylistsRoute: PlaylistsRoute,
+  PlaylistsRoute: PlaylistsRouteWithChildren,
   RadarRoute: RadarRoute,
   RankingRoute: RankingRoute,
   AcoesAlbumRoute: AcoesAlbumRoute,
