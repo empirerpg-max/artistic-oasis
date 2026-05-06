@@ -20,6 +20,7 @@ import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as AlbunsRouteImport } from './routes/albuns'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArtistasIndexRouteImport } from './routes/artistas.index'
+import { Route as PlaylistsNovaRouteImport } from './routes/playlists.nova'
 import { Route as PlaylistsIdRouteImport } from './routes/playlists.$id'
 import { Route as ArtistasNomeRouteImport } from './routes/artistas.$nome'
 import { Route as AlbumIdRouteImport } from './routes/album.$id'
@@ -84,6 +85,11 @@ const ArtistasIndexRoute = ArtistasIndexRouteImport.update({
   path: '/artistas/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlaylistsNovaRoute = PlaylistsNovaRouteImport.update({
+  id: '/nova',
+  path: '/nova',
+  getParentRoute: () => PlaylistsRoute,
+} as any)
 const PlaylistsIdRoute = PlaylistsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/album/$id': typeof AlbumIdRoute
   '/artistas/$nome': typeof ArtistasNomeRouteWithChildren
   '/playlists/$id': typeof PlaylistsIdRoute
+  '/playlists/nova': typeof PlaylistsNovaRoute
   '/artistas/': typeof ArtistasIndexRoute
   '/artistas/$nome/bens': typeof ArtistasNomeBensRoute
   '/artistas/$nome/projetos': typeof ArtistasNomeProjetosRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/album/$id': typeof AlbumIdRoute
   '/artistas/$nome': typeof ArtistasNomeRouteWithChildren
   '/playlists/$id': typeof PlaylistsIdRoute
+  '/playlists/nova': typeof PlaylistsNovaRoute
   '/artistas': typeof ArtistasIndexRoute
   '/artistas/$nome/bens': typeof ArtistasNomeBensRoute
   '/artistas/$nome/projetos': typeof ArtistasNomeProjetosRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/album/$id': typeof AlbumIdRoute
   '/artistas/$nome': typeof ArtistasNomeRouteWithChildren
   '/playlists/$id': typeof PlaylistsIdRoute
+  '/playlists/nova': typeof PlaylistsNovaRoute
   '/artistas/': typeof ArtistasIndexRoute
   '/artistas/$nome/bens': typeof ArtistasNomeBensRoute
   '/artistas/$nome/projetos': typeof ArtistasNomeProjetosRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/album/$id'
     | '/artistas/$nome'
     | '/playlists/$id'
+    | '/playlists/nova'
     | '/artistas/'
     | '/artistas/$nome/bens'
     | '/artistas/$nome/projetos'
@@ -229,6 +239,7 @@ export interface FileRouteTypes {
     | '/album/$id'
     | '/artistas/$nome'
     | '/playlists/$id'
+    | '/playlists/nova'
     | '/artistas'
     | '/artistas/$nome/bens'
     | '/artistas/$nome/projetos'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/album/$id'
     | '/artistas/$nome'
     | '/playlists/$id'
+    | '/playlists/nova'
     | '/artistas/'
     | '/artistas/$nome/bens'
     | '/artistas/$nome/projetos'
@@ -353,6 +365,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtistasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/playlists/nova': {
+      id: '/playlists/nova'
+      path: '/nova'
+      fullPath: '/playlists/nova'
+      preLoaderRoute: typeof PlaylistsNovaRouteImport
+      parentRoute: typeof PlaylistsRoute
+    }
     '/playlists/$id': {
       id: '/playlists/$id'
       path: '/$id'
@@ -414,10 +433,12 @@ declare module '@tanstack/react-router' {
 
 interface PlaylistsRouteChildren {
   PlaylistsIdRoute: typeof PlaylistsIdRoute
+  PlaylistsNovaRoute: typeof PlaylistsNovaRoute
 }
 
 const PlaylistsRouteChildren: PlaylistsRouteChildren = {
   PlaylistsIdRoute: PlaylistsIdRoute,
+  PlaylistsNovaRoute: PlaylistsNovaRoute,
 }
 
 const PlaylistsRouteWithChildren = PlaylistsRoute._addFileChildren(
