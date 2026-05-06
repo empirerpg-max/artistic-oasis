@@ -1,5 +1,5 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useLocation } from "@tanstack/react-router";
-import { Home, Crown, Library, Radio } from "lucide-react";
+import { Home, Crown, Library, Radio, Disc3, ListMusic } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
@@ -94,12 +94,14 @@ function BottomNav() {
   const items = [
     { to: "/", label: "Início", icon: Home },
     { to: "/artistas", label: "Artistas", icon: Library },
+    { to: "/albuns", label: "Álbuns", icon: Disc3 },
+    { to: "/playlists", label: "Playlists", icon: ListMusic },
     { to: "/charts", label: "Império", icon: Crown },
     { to: "/radar", label: "Radar", icon: Radio },
   ];
   return (
     <nav className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto max-w-2xl flex items-center justify-around px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <div className="mx-auto max-w-2xl flex items-center justify-around px-1 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         {items.map((it) => {
           const active = pathname === it.to || (it.to !== "/" && pathname.startsWith(it.to));
           const Icon = it.icon;
@@ -107,12 +109,12 @@ function BottomNav() {
             <Link
               key={it.to}
               to={it.to}
-              className={`flex flex-col items-center gap-1 px-4 py-1.5 rounded-xl transition-all ${
+              className={`flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl transition-all ${
                 active ? "text-primary" : "text-muted-foreground"
               }`}
             >
               <Icon className={`size-5 ${active ? "scale-110" : ""}`} strokeWidth={active ? 2.5 : 2} />
-              <span className="text-[10px] font-bold uppercase tracking-wider">{it.label}</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider">{it.label}</span>
             </Link>
           );
         })}
