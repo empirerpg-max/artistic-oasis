@@ -16,6 +16,7 @@ import { Route as LeiloesRouteImport } from './routes/leiloes'
 import { Route as HallRouteImport } from './routes/hall'
 import { Route as GravadorasRouteImport } from './routes/gravadoras'
 import { Route as ChartsRouteImport } from './routes/charts'
+import { Route as AlbunsRouteImport } from './routes/albuns'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArtistasIndexRouteImport } from './routes/artistas.index'
 import { Route as ArtistasNomeRouteImport } from './routes/artistas.$nome'
@@ -59,6 +60,11 @@ const GravadorasRoute = GravadorasRouteImport.update({
 const ChartsRoute = ChartsRouteImport.update({
   id: '/charts',
   path: '/charts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlbunsRoute = AlbunsRouteImport.update({
+  id: '/albuns',
+  path: '/albuns',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -109,6 +115,7 @@ const ArtistasNomeBensRoute = ArtistasNomeBensRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/albuns': typeof AlbunsRoute
   '/charts': typeof ChartsRoute
   '/gravadoras': typeof GravadorasRoute
   '/hall': typeof HallRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/albuns': typeof AlbunsRoute
   '/charts': typeof ChartsRoute
   '/gravadoras': typeof GravadorasRoute
   '/hall': typeof HallRoute
@@ -146,6 +154,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/albuns': typeof AlbunsRoute
   '/charts': typeof ChartsRoute
   '/gravadoras': typeof GravadorasRoute
   '/hall': typeof HallRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/albuns'
     | '/charts'
     | '/gravadoras'
     | '/hall'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/albuns'
     | '/charts'
     | '/gravadoras'
     | '/hall'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/albuns'
     | '/charts'
     | '/gravadoras'
     | '/hall'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlbunsRoute: typeof AlbunsRoute
   ChartsRoute: typeof ChartsRoute
   GravadorasRoute: typeof GravadorasRoute
   HallRoute: typeof HallRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       path: '/charts'
       fullPath: '/charts'
       preLoaderRoute: typeof ChartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/albuns': {
+      id: '/albuns'
+      path: '/albuns'
+      fullPath: '/albuns'
+      preLoaderRoute: typeof AlbunsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -369,6 +389,7 @@ const ArtistasNomeRouteWithChildren = ArtistasNomeRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlbunsRoute: AlbunsRoute,
   ChartsRoute: ChartsRoute,
   GravadorasRoute: GravadorasRoute,
   HallRoute: HallRoute,
@@ -386,3 +407,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
