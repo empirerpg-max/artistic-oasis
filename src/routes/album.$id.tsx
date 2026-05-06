@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Play, Pause, Share2, Music, Image as ImageIcon, Disc3 } from "lucide-react";
+import { ChevronLeft, Play, Pause, Share2, Music, Image as ImageIcon, Disc3, Edit } from "lucide-react";
 import { api, driveImg, driveAudioSrc, type AlbumPayload } from "@/lib/api";
 
 export const Route = createFileRoute("/album/$id")({
@@ -88,6 +88,9 @@ function AlbumPage() {
           <button onClick={share} className="px-4 py-2 rounded-full bg-card border border-border inline-flex items-center gap-2 text-sm font-bold">
             <Share2 className="size-4" /> {copied ? "Link copiado!" : "Compartilhar"}
           </button>
+          <Link to="/album/$id/editar" params={{ id }} className="px-4 py-2 rounded-full bg-card border border-border inline-flex items-center gap-2 text-sm font-bold">
+            <Edit className="size-4" /> Editar
+          </Link>
         </div>
       </div>
 
