@@ -253,7 +253,54 @@ export const api = {
     const r = await call<any[]>({ acao: "listar_albuns", nome: nome || "" }, { cache: true });
     return Array.isArray(r) ? r : [];
   },
+  async editarAlbum(payload: AlbumPayload): Promise<{ ok: boolean; id?: string; message?: string }> {
+    invalidateCache();
+    return call({ acao: "editar_album", payload: JSON.stringify(payload) });
+  },
+  async excluirAlbum(id: string, telegramId?: string): Promise<{ ok: boolean; message?: string }> {
+    invalidateCache();
+    return call({ acao: "excluir_album", id, telegram_id: telegramId || "" });
+  },
+
+  // ---- Playlists ----
+  async listarPlaylists(telegramId?: string): Promise<PlaylistPayload[]> {
+    const r = await call<any[]>({ acao: "listar_playlists", telegram_id: telegramId || "" }, { cache: true });
+    return Array.isArray(r) ? r : [];
+  },
+  async getPlaylist(id: string): Promise<PlaylistPayload | null> {
+    const r = await call<any>({ acao: "get_playlist", id }, { cache: true });
+    if (!r || r.error) return null;
+    return r as PlaylistPayload;
+  },
+  async salvarPlaylist(payload: PlaylistPayload): Promise<{ ok: boolean; id?: string; message?: string }> {
+    invalidateCache();
+    return call({ acao: "salvar_playlist", payload: JSON.stringify(payload) });
+  },
+  async excluirPlaylist(id: string, telegramId?: string): Promise<{ ok: boolean; message?: string }> {
+    invalidateCache();
+    return call({ acao: "excluir_playlist", id, telegram_id: telegramId || "" });
+  },
 };
+
+export interface PlaylistTrack {
+  album_id: string;
+  faixa_numero: number;
+  titulo: string;
+  artistas: string;
+  drive_url: string;
+  capa_url?: string;
+  duracao?: string;
+}
+export interface PlaylistPayload {
+  id?: string;
+  titulo: string;
+  descricao?: string;
+  capa_url?: string;
+  owner: string;          // nome do criador (artista ou user)
+  telegram_id?: string;
+  tracks: PlaylistTrack[];
+  data?: string;
+}
 
 export function fmtEC(n: number) {
   return `EC ${(n || 0).toLocaleString("pt-BR")}`;
