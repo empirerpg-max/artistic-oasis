@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Mic2, Film, Disc3, Wallet, Trophy, Zap, Briefcase, Flame, HandHeart, X, Loader2, ShoppingBag, Building2, Gavel, Radio, FileX } from "lucide-react";
 import { useTelegramUser } from "@/lib/telegram";
-import { api, fmtEC, fmtMoney, driveImg, type Artist } from "@/lib/api";
+import { api, fmtEC, fmtMoney, driveImg, type Artist, type AlbumPayload } from "@/lib/api";
 import { notify } from "@/lib/notify";
 
 export const Route = createFileRoute("/artistas/$nome")({
@@ -15,6 +15,7 @@ function ArtistDashboard() {
   const [artist, setArtist] = useState<Artist | null>(null);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<null | "viral" | "filantropia" | "payola" | "leilao" | "rescisao" | "composicao" | "imovel">(null);
+  const [albuns, setAlbuns] = useState<AlbumPayload[]>([]);
 
   useEffect(() => {
     if (!ready || !user) return;
@@ -23,6 +24,7 @@ function ArtistDashboard() {
       setArtist(list.find((a) => a.nome === nome) || null);
       setLoading(false);
     });
+    api.listarAlbuns(nome).then(setAlbuns);
   }, [ready, user, nome]);
 
   if (loading) {
@@ -93,6 +95,27 @@ function ArtistDashboard() {
             <BensLink nome={artist.nome} />
             <MarketLink />
           </div>
+        </section>
+
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-extrabold">Álbuns</h2>
+            <Link to="/acoes/album" search={{ nome: artist.nome }} className="text-xs font-bold text-primary">+ Lançar</Link>
+          </div>
+          {albuns.length === 0 ? (
+            <p className="text-xs text-muted-foreground">Nenhum álbum lançado ainda.</p>
+          ) : (
+            <div className="grid grid-cols-3 gap-2">
+              {albuns.map((a) => (
+                <Link key={a.id} to="/album/$id" params={{ id: a.id! }} className="group">
+                  <div className="aspect-square rounded-lg overflow-hidden bg-secondary">
+                    {a.capa_url && <img src={driveImg(a.capa_url, 300)} alt={a.titulo} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />}
+                  </div>
+                  <p className="mt-1 text-xs font-bold truncate">{a.titulo}</p>
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
       </div>
 
